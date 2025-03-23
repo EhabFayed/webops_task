@@ -1,8 +1,9 @@
 # Use Ruby base image
 FROM ruby:3.2
 
-# Install dependencies
-RUN apt-get update -qq && apt-get install -y nodejs npm postgresql-client
+# Install dependencies (including libvips for ruby-vips)
+RUN apt-get update -qq && \
+    apt-get install -y nodejs npm postgresql-client libvips-dev
 
 # Set working directory
 WORKDIR /app

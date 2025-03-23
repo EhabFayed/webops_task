@@ -28,6 +28,7 @@ services:
       REDIS_URL: redis://redis:6379/0
     volumes:
       - .:/app
+      - storage:/app/storage
     ports:
       - "3000:3000"
     command: ["bin/rails", "server", "-b", "0.0.0.0"]
@@ -41,7 +42,10 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
       REDIS_URL: redis://redis:6379/0
+    volumes:
+      - storage:/app/storage
     command: ["bundle", "exec", "sidekiq"]
 
 volumes:
   postgres_data:
+  storage:
