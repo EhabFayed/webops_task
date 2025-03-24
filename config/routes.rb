@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   post 'signup', to: 'authentication#signup'
   post 'login', to: 'authentication#login'
+  put    'users/:id',   to: 'authentication#update'
+  delete 'users/:id',   to: 'authentication#destroy'
   resources :posts, only: [:index, :show, :create, :update, :destroy] do
     resources :comments, only: [:index, :create, :update, :destroy]
   end

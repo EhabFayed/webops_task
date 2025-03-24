@@ -1,8 +1,12 @@
 # spec/requests/auth_spec.rb
+# spec/requests/auth_spec.rb
 require 'rails_helper'
 
 RSpec.describe "Authentication", type: :request do
   let(:user) { create(:user, email: 'test@example.com', password: '123456') }
+  let(:other_user) { create(:user, email: 'intruder@example.com', password: '123456') }
+  let(:headers) { { "Authorization" => "Bearer #{JsonWebToken.encode(user_id: user.id)}" } }
+  let(:other_headers) { { "Authorization" => "Bearer #{JsonWebToken.encode(user_id: other_user.id)}" } }
 
   it "signs up successfully" do
     file = fixture_file_upload(Rails.root.join("spec", "fixtures", "files", "sample.jpg"), 'image/jpeg')
@@ -75,7 +79,50 @@ RSpec.describe "Authentication", type: :request do
 
     expect(response).to have_http_status(:unauthorized)
   end
+
+  it "updates own profile successfully except email" do
+    put "/users/#{user.id}", params: {
+      user: {
+        name: "Updated Name",
+        password: "newpass",
+        password_confirmation: "newpass"
+      }
+    }, headers: headers
+
+    expect(response).to have_http_status(:ok)
+    expect(JSON.parse(response.body)["user"]["name"]).to eq("Updated Name")
+  end
+
+  it "fails to update email in profile" do
+    put "/users/#{user.id}", params: {
+      user: {
+        email: "hacker@example.com"
+      }
+    }, headers: headers
+
+    expect(response).to have_http_status(:unprocessable_entity)
+    expect(JSON.parse(response.body)["error"]).to include("Email can't be updated")
+  end
+
+  it "fails to update another user's profile" do
+    put "/users/#{user.id}", params: {
+      user: { name: "Hacked" }
+    }, headers: other_headers
+
+    expect(response).to have_http_status(:unauthorized)
+  end
+
+  it "deletes own profile successfully" do
+    delete "/users/#{user.id}", headers: headers
+    expect(response).to have_http_status(:no_content)
+  end
+
+  it "fails to delete another user's profile" do
+    delete "/users/#{user.id}", headers: other_headers
+    expect(response).to have_http_status(:unauthorized)
+  end
 end
+
 
 # spec/requests/posts_spec.rb
 require 'rails_helper'
