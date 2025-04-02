@@ -19,7 +19,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
-gem 'sidekiq', '~> 8.0', '>= 8.0.1'
+gem 'sidekiq', '~> 8.0'
 gem 'jwt'
 gem 'ruby-vips'
 gem "image_processing", "~> 1.2"
