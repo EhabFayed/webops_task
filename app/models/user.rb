@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_one_attached :image
 
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true, format: { with: /\A[\w+\-.]+@[a-zA-Z\d\-.]+\.[a-zA-Z]+\z/, message: "must be a valid email format" }
+  validates :email,presence: true,uniqueness: true,format: {  with: /\A[\w+\-.]+@milaknights\.com\z/i,  message: "must be a milaknights.com email"}
   validates :password, presence: true, length: { minimum: 6 }
   validate :email_unchanged, on: :update
 
