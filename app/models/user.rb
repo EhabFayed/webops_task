@@ -1,9 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
-  has_many :posts, dependent: :destroy
-  has_many :comments, dependent: :destroy
-
-  # Attach an image to the user
+  has_many :plogs
+  has_many :faqs
+  has_many :contents
   has_one_attached :image
 
   validates :name, presence: true
