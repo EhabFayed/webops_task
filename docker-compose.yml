@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: blog_development
+      POSTGRES_DB: app_production
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -35,11 +35,15 @@ services:
       redis:
         condition: service_healthy
     environment:
-      RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:password@db:5432/blog_development
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postgres:password@db:5432/app_production
       REDIS_URL: redis://redis:6379/0
       RAILS_LOG_TO_STDOUT: "true"
       RAILS_SERVE_STATIC_FILES: "true"
+      RAILS_HOST: backend.mila-knight.com
+      RAILS_PROTOCOL: https
+      RAILS_ASSUME_SSL: "true"
+      RAILS_FORCE_SSL: "true"
       PORT: "3000"
     volumes:
       - storage:/app/storage
@@ -62,8 +66,8 @@ services:
       redis:
         condition: service_healthy
     environment:
-      RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:password@db:5432/blog_development
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postgres:password@db:5432/app_production
       REDIS_URL: redis://redis:6379/0
     volumes:
       - storage:/app/storage
