@@ -41,17 +41,20 @@ class Plog < ApplicationRecord
         title_en: plog.title_en,
         category: plog.category,
         # photos: plog.photos,
-        contents: plog.contents.where(plog_id: plog.id).map do |content|
+        contents: plog.contents.where(is_deleted: false,is_published: true).map do |content|
           {
             id: content.id,
-            content: content.content
+            content_ar: content.content_ar,
+            content_en: content.content_en
           }
         end,
-        faqs: plog.faqs.where(is_deleted: false , is_published: false).map do |faq|
+        faqs: plog.faqs.where(is_deleted: false , is_published: true).map do |faq|
           {
             id: faq.id,
-            question: faq.question,
-            answer: faq.answer
+            question_ar: faq.question_ar,
+            question_en: faq.question_en,
+            answer_ar: faq.answer_ar,
+            answer_en: faq.answer_en
           }
         end
       }
