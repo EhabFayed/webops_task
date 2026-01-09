@@ -44,14 +44,14 @@ services:
       RAILS_PROTOCOL: https
       RAILS_ASSUME_SSL: "true"
       RAILS_FORCE_SSL: "true"
-      PORT: "3000"
+      PORT: "9001"
     volumes:
       - storage:/app/storage
     ports:
-      - "3000:3000" 
-    command: ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+      - "9001:9001"  # Map host port 9001 to container port 9001
+    command: ["bin/rails", "server", "-b", "0.0.0.0", "-p", "9001"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      test: ["CMD", "curl", "-f", "http://localhost:9001/up"]
       interval: 10s
       timeout: 5s
       retries: 5

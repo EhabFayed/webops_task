@@ -29,7 +29,7 @@ COPY bin/docker-entrypoint /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
 # Expose Rails port
-EXPOSE 3000
+EXPOSE 9001
 
 # Use docker-entrypoint as entrypoint
 ENTRYPOINT ["docker-entrypoint"]
