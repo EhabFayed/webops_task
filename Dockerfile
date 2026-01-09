@@ -35,4 +35,5 @@ EXPOSE 9001
 ENTRYPOINT ["docker-entrypoint"]
 
 # Start Rails server
-CMD ["bash", "-c", "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0"]
+# Use PORT environment variable or default to 9001
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0 -p ${PORT:-9001}"]

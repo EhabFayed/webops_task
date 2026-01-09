@@ -8,7 +8,13 @@ fi
 
 # If running the rails server then create or migrate existing database
 if [[ "${@}" == *"rails"* ]] && [[ "${@}" == *"server"* ]]; then
-  bin/rails db:prepare
+  echo "Preparing database..."
+  # Wait for database to be ready
+  until bin/rails db:prepare; do
+    echo "Database is unavailable - sleeping"
+    sleep 2
+  done
+  echo "Database is ready!"
 fi
 
 exec "${@}"
