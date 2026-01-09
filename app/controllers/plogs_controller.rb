@@ -25,28 +25,19 @@ class PlogsController < ApplicationController
   # PATCH/PUT /plogs/:id
   def update
     plog = Plog.find(params[:id])
-
-    if plog.user_id == current_user.id
       if plog.update(plog_params)
         render json: plog
       else
         render json: { error: plog.errors.full_messages }, status: :unprocessable_entity
       end
-    else
-      render json: { error: 'Not authorized to update this plog' }, status: :unauthorized
-    end
   end
 
   # DELETE /plogs/:id
   def destroy
     plog = Plog.find(params[:id])
 
-    if plog.user_id == current_user.id
       plog.update(is_deleted: true)
       render json: { message: 'Plog deleted successfully' }, status: :ok
-    else
-      render json: { error: 'Not authorized to delete this plog' }, status: :unauthorized
-    end
   end
 
   private

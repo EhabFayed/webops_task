@@ -15,7 +15,7 @@ class FaqsController < ApplicationController
     faq = plog.faqs.build(faq_params)
     faq.user_id = current_user.id
     if faq.save
-      render json: faq, status: :created
+      render json: {message: 'Faq created successfully'}, status: :created
     else
       render json: { error: faq.errors.full_messages }, status: :unprocessable_entity
     end
@@ -24,28 +24,18 @@ class FaqsController < ApplicationController
   # PATCH/PUT plog/:plog_id/faqs/:id
   def update
     faq = Faq.find(params[:id])
-
-    if faq.user_id == current_user.id
       if faq.update(faq_params)
-        render json: faq
+        render json: {message: 'Faq updated successfully'}, status: :ok
       else
         render json: { error: faq.errors.full_messages }, status: :unprocessable_entity
       end
-    else
-      render json: { error: 'Not authorized to update this faq' }, status: :unauthorized
-    end
   end
 
   # DELETE plog/:plog_id/faqs/:id
   def destroy
     faq = Faq.find(params[:id])
-
-    if faq.user_id == current_user.id
-      faq.update(is_deleted: true)
-      render json: { message: 'Faq deleted successfully' }, status: :ok
-    else
-      render json: { error: 'Not authorized to delete this faq' }, status: :unauthorized
-    end
+    faq.update(is_deleted: true)
+    render json: { message: 'Faq deleted successfully' }, status: :ok
   end
 
   private

@@ -10,7 +10,7 @@ class ContentsController < ApplicationController
     plog = Plog.find(params[:plog_id])
     content = plog.contents.build(content_params)
     if content.save
-      render json: content, status: :created
+      render json: {message: 'Content created successfully'}, status: :created
     else
       render json: { error: content.errors.full_messages }, status: :unprocessable_entity
     end
@@ -19,7 +19,7 @@ class ContentsController < ApplicationController
   def update
     content = Content.find(params[:id])
     if content.update(content_params)
-      render json: content
+      render json: {message: 'Content updated successfully'}, status: :ok
     else
       render json: { error: content.errors.full_messages }, status: :unprocessable_entity
     end
@@ -27,12 +27,8 @@ class ContentsController < ApplicationController
   # DELETE /plog/:plog_id/contents/:id
   def destroy
     content = Content.find(params[:id])
-    if content.user_id == current_user.id
       content.update(is_deleted: true)
       render json: { message: 'Content deleted successfully' }, status: :ok
-    else
-      render json: { error: 'Not authorized to delete this content' }, status: :unauthorized
-    end
   end
 
   private
