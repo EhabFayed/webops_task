@@ -9,6 +9,7 @@ class ContentsController < ApplicationController
   def create
     plog = Plog.find(params[:plog_id])
     content = plog.contents.build(content_params)
+    content.user_id = current_user.id
     if content.save
       render json: {message: 'Content created successfully'}, status: :created
     else
