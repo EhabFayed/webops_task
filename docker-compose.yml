@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:15
@@ -5,42 +7,43 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: myapp_development
+      POSTGRES_DB: blog_development
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
   redis:
     image: redis:7
     restart: always
-    ports:
-      - "6379:6379"
 
   app:
     build: .
+    image: myapp_image:latest 
     restart: always
     depends_on:
       - db
       - redis
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:password@db:5432/blog_development
       REDIS_URL: redis://redis:6379/0
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
     volumes:
-      - .:/app
       - storage:/app/storage
     ports:
-      - "3000:3000"
+      - "3000:3000" 
     command: ["bin/rails", "server", "-b", "0.0.0.0"]
 
   sidekiq:
-    build: .
+    image: myapp_image:latest 
     restart: always
     depends_on:
+      - app 
       - redis
       - db
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:password@db:5432/blog_development
       REDIS_URL: redis://redis:6379/0
     volumes:
       - storage:/app/storage

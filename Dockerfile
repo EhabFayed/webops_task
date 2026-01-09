@@ -24,8 +24,15 @@ RUN bundle install
 # Copy the rest of the application source code
 COPY . .
 
+# Copy docker-entrypoint script
+COPY bin/docker-entrypoint /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint
+
 # Expose Rails port
 EXPOSE 3000
 
+# Use docker-entrypoint as entrypoint
+ENTRYPOINT ["docker-entrypoint"]
+
 # Start Rails server
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0"]
