@@ -36,4 +36,5 @@ ENTRYPOINT ["docker-entrypoint"]
 
 # Start Rails server
 # Use PORT environment variable or default to 9001
-CMD ["bash", "-c", "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0 -p ${PORT:-9001}"]
+# Note: This CMD is overridden by docker-compose.yml command
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0 -p ${PORT:-9001}"]

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15
@@ -45,6 +43,8 @@ services:
       RAILS_ASSUME_SSL: "false"
       RAILS_FORCE_SSL: "false"
       PORT: "9001"
+      # Secret key base for Rails production (generate with: openssl rand -hex 64)
+      SECRET_KEY_BASE: "502dbc5ee08cfc4507e6bb6a64606c5a10134564e81f28a5af93d27024ec0fac3184afc69f680ebc5d9d1cf76d90ce8be975a2f3e1d0f0661d83fb9441e55d07"
     volumes:
       - storage:/app/storage
     ports:
@@ -69,6 +69,8 @@ services:
       RAILS_ENV: production
       DATABASE_URL: postgres://postgres:password@db:5432/app_production
       REDIS_URL: redis://redis:6379/0
+      # Use the same SECRET_KEY_BASE as app service
+      SECRET_KEY_BASE: "502dbc5ee08cfc4507e6bb6a64606c5a10134564e81f28a5af93d27024ec0fac3184afc69f680ebc5d9d1cf76d90ce8be975a2f3e1d0f0661d83fb9441e55d07"
     volumes:
       - storage:/app/storage
     command: ["bundle", "exec", "sidekiq"]
