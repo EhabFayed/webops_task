@@ -42,7 +42,7 @@ class FaqsController < ApplicationController
 
     if faq.user_id == current_user.id
       faq.update(is_deleted: true)
-      head :no_content
+      render json: { message: 'Faq deleted successfully' }, status: :ok
     else
       render json: { error: 'Not authorized to delete this faq' }, status: :unauthorized
     end
@@ -51,6 +51,6 @@ class FaqsController < ApplicationController
   private
 
   def faq_params
-    params.require(:faq).permit(plog_id: params[:plog_id], :question_ar, :question_en, :answer_ar, :answer_en, :is_published)
+    params.require(:faq).permit(:question_ar, :question_en, :answer_ar, :answer_en, :is_published)
   end
 end

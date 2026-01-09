@@ -5,6 +5,9 @@ class CreateContent < ActiveRecord::Migration[8.0]
       t.text :content_en
       t.integer :plog_id
       t.integer :user_id
+      t.boolean :is_deleted, default: false
+      t.boolean :is_published, default: false
+
       t.timestamps
     end
   end

@@ -47,6 +47,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_010551) do
     t.text "content_en"
     t.integer "plog_id"
     t.integer "user_id"
+    t.boolean "is_deleted", default: false
+    t.boolean "is_published", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -59,6 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_09_010551) do
     t.integer "plog_id"
     t.boolean "is_deleted", default: false
     t.boolean "is_published", default: false
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

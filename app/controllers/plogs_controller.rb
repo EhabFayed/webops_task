@@ -8,7 +8,7 @@ class PlogsController < ApplicationController
 
   # GET /plogs/:id
   def show
-    plog = Plog.find(params[:id])
+    plog = Plog.plog_details(params[:id])
     render json: plog
   end
 
@@ -43,7 +43,7 @@ class PlogsController < ApplicationController
 
     if plog.user_id == current_user.id
       plog.update(is_deleted: true)
-      # head :no_content
+      render json: { message: 'Plog deleted successfully' }, status: :ok
     else
       render json: { error: 'Not authorized to delete this plog' }, status: :unauthorized
     end
@@ -53,6 +53,6 @@ class PlogsController < ApplicationController
 
   def plog_params
     params.require(:plog).permit( :title_ar, :title_en, :image_alt_text_ar, :image_alt_text_en,
-                                 :meta_title_ar, :meta_title_en, :slug, :meta_description_ar, :meta_description_en,:category)
+                                 :meta_title_ar, :meta_title_en, :slug, :meta_description_ar, :meta_description_en,:category,:is_published )
   end
 end
