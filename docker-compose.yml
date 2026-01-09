@@ -10,37 +10,57 @@ services:
       POSTGRES_DB: blog_development
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7
     restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   app:
     build: .
     image: myapp_image:latest 
     restart: always
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@db:5432/blog_development
       REDIS_URL: redis://redis:6379/0
       RAILS_LOG_TO_STDOUT: "true"
       RAILS_SERVE_STATIC_FILES: "true"
+      PORT: "3000"
     volumes:
       - storage:/app/storage
     ports:
       - "3000:3000" 
-    command: ["bin/rails", "server", "-b", "0.0.0.0"]
+    command: ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   sidekiq:
     image: myapp_image:latest 
     restart: always
     depends_on:
-      - app 
-      - redis
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@db:5432/blog_development

@@ -3,7 +3,7 @@ FROM ruby:3.2
 
 # Install dependencies (including libvips for ruby-vips)
 RUN apt-get update -qq && \
-    apt-get install -y nodejs npm postgresql-client libvips-dev
+    apt-get install -y nodejs npm postgresql-client libvips-dev curl
 
 # Set working directory
 WORKDIR /app
