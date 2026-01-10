@@ -10,6 +10,7 @@ class ContentsController < ApplicationController
         content_en: content.content_en,
         photos: content.content_photos.map do |cp|
           {
+            cp_id: cp.id,
             url: cp.photo.attached? ? url_for(cp.photo) : nil,
             alt_ar: cp.alt_ar,
             alt_en: cp.alt_en

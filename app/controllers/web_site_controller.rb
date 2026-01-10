@@ -63,4 +63,18 @@ skip_before_action :authorize_request
       render json: { error: 'Plog not found' }, status: :not_found
     end
   end
+
+  def faq_about_us
+    faqs = Faq.where(is_deleted: false, is_published: true, plog_id: nil)
+
+    render json: faqs.map { |faq|
+      {
+        id: faq.id,
+        question_ar: faq.question_ar,
+        question_en: faq.question_en,
+        answer_ar: faq.answer_ar,
+        answer_en: faq.answer_en
+      }
+    }
+  end
 end
