@@ -1,17 +1,8 @@
 class Content < ApplicationRecord
-validates :content_ar, presence: true
-validates :content_en, presence: true
-belongs_to :plog, required: true
-belongs_to :user, required: true
+  validates :content_ar, :content_en, presence: true
 
-  def sections_data(plog_id)
-    contents = Content.where(plog_id: plog_id)
-    contents.map do |content|
-      {
-        id: content.id,
-        content: content.content
-      }
-    end
-  end
+  belongs_to :plog
+  belongs_to :user
 
+  has_many_attached :photos
 end
