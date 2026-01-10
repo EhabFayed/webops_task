@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     resources :contents, only: [:index, :create, :update, :destroy]
   end
   get "up" => "rails/health#show", as: :rails_health_check
+  get "plogs_landing", to: "web_site#plogs_landing"
+  get "plog_show/", to: "web_site#plog_show"
   mount Sidekiq::Web => "/sidekiq"
 
   # Defines the root path route ("/")
