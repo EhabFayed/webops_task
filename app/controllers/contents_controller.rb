@@ -1,10 +1,20 @@
 class ContentsController < ApplicationController
   # skip_before_action :authorize_request, only: [:create]
   def index
-    plog = Plog.find(params[:plog_id])
-    contents = plog.contents
-    render json: contents
+  plog = Plog.find(params[:plog_id])
+
+  contents = plog.contents.where(is_deleted: false).map do |content|
+    {
+      id: content.id,
+      content_ar: content.content_ar,
+      content_en: content.content_en,
+      photos: content.photos.map { |p| url_for(p) }
+    }
   end
+
+  render json: contents
+end
+
     # POST /plog/:plog_id/contents
   def create
     plog = Plog.find(params[:plog_id])
@@ -16,6 +26,7 @@ class ContentsController < ApplicationController
       render json: { error: content.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
   # PATCH/PUT /plog/:plog_id/contents/:id
   def update
     content = Content.find(params[:id])
@@ -34,6 +45,12 @@ class ContentsController < ApplicationController
 
   private
   def content_params
-    params.require(:content).permit(:content_ar, :content_en, :plog_id,:is_published)
+  params.require(:content).permit(
+    :content_ar,
+    :content_en,
+    :is_published,
+    photos: []
+  )
   end
+
 end

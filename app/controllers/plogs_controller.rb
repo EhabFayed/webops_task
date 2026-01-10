@@ -39,7 +39,26 @@ class PlogsController < ApplicationController
           image_alt_text_en: plog.image_alt_text_en,
           meta_title_ar: plog.meta_title_ar,
           meta_title_en: plog.meta_title_en,
-          is_published: plog.is_published
+          is_published: plog.is_published,
+          contents: plog.contents.where(is_deleted: false).map do |content|
+            {
+              id: content.id,
+              content_ar: content.content_ar,
+              content_en: content.content_en,
+              photos: content.photos.map { |p| url_for(p) },
+              is_published: content.is_published
+            }
+          end,
+          faqs: plog.faqs.where(is_deleted: false).map do |faq|
+            {
+              id: faq.id,
+              question_ar: faq.question_ar,
+              question_en: faq.question_en,
+              answer_ar: faq.answer_ar,
+              answer_en: faq.answer_en,
+              is_published: faq.is_published
+            }
+          end
         }
 
     render json: data
