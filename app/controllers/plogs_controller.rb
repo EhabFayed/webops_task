@@ -48,6 +48,7 @@ class PlogsController < ApplicationController
               is_published: content.is_published,
               photos: content.content_photos.map do |cp|
                 {
+                  id: cp.id,
                   url: cp.photo.attached? ? url_for(cp.photo) : nil,
                   alt_ar: cp.alt_ar,
                   alt_en: cp.alt_en
