@@ -4,7 +4,16 @@ class FaqsController < ApplicationController
   # GET /plog/:plog_id/faqs
   def index
     plog = Plog.find(params[:plog_id])
-    faqs = plog.faqs
+    faqs = plog.faqs.where(is_deleted: false).map do |faq|
+      {
+        id: faq.id,
+        question_ar: faq.question_ar,
+        question_en: faq.question_en,
+        answer_ar: faq.answer_ar,
+        answer_en: faq.answer_en,
+        is_published: faq.is_published
+      }
+    end
     render json: faqs
   end
 
