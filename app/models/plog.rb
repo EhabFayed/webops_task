@@ -16,7 +16,7 @@ class Plog < ApplicationRecord
 
 
   class << self
-    def plog_boilerplate
+    def plog_details_list
       data=[]
       Plog.published.each do |plog|
         data << {
@@ -25,6 +25,13 @@ class Plog < ApplicationRecord
           title_ar: plog.title_ar,
           title_en: plog.title_en,
           category: plog.category,
+          slug: plog.slug,
+          image_alt_text_ar: plog.image_alt_text_ar,
+          image_alt_text_en: plog.image_alt_text_en,
+          meta_title_ar: plog.meta_title_ar,
+          meta_title_en: plog.meta_title_en,
+          meta_description_ar: plog.meta_description_ar,
+          meta_description_en: plog.meta_description_en
         }
       end
       data
@@ -35,7 +42,7 @@ class Plog < ApplicationRecord
       return nil unless plog
 
       {
-        id: plog.id,#i guess we dont need it here again
+        id: plog.id,
         photo_id: plog.photo_id,
         title_ar: plog.title_ar,
         title_en: plog.title_en,

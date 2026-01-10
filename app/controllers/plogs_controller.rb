@@ -2,7 +2,7 @@ class PlogsController < ApplicationController
 
   # GET /plogs
   def index
-    plogs = Plog.plog_boilerplate
+    plogs = Plog.plog_details_list
     render json: plogs
   end
 
