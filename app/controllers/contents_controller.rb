@@ -1,5 +1,5 @@
 class ContentsController < ApplicationController
-  skip_before_action :authorize_request, only: [:create]
+  # skip_before_action :authorize_request, only: [:create]
   def index
     plog = Plog.find(params[:plog_id])
     contents = plog.contents
