@@ -1,70 +1,21 @@
 class Plog < ApplicationRecord
   extend Enumerize
-  validates :title_ar, presence: true
-  validates :title_en, presence: true
 
-  enumerize :category, in: {all: 0, Branding: 1, Web_design: 2, Graphic_design: 3, digital_marketing: 4, e_commerce: 5 }
-  # Optionally, you can add logic for "archived" or "deleted" posts
+  validates :title_ar, :title_en, presence: true
+
+  enumerize :category, in: {
+    all: 0,
+    Branding: 1,
+    Web_design: 2,
+    Graphic_design: 3,
+    digital_marketing: 4,
+    e_commerce: 5
+  }
+
+  scope :not_deleted, -> { where(is_deleted: false) }
   scope :published, -> { where(is_deleted: false, is_published: true) }
-  scope :not_ready, -> { where(is_published: false) }
-  scope :deleted, -> { where(is_deleted: true) }
 
   has_many :faqs
   has_many :contents
-  has_many :photos
-
-
-
-  class << self
-    def plog_details_list
-      data=[]
-      Plog.published.each do |plog|
-        data << {
-          id: plog.id,
-          photo_id: plog.photo_id,
-          title_ar: plog.title_ar,
-          title_en: plog.title_en,
-          category: plog.category,
-          slug: plog.slug,
-          image_alt_text_ar: plog.image_alt_text_ar,
-          image_alt_text_en: plog.image_alt_text_en,
-          meta_title_ar: plog.meta_title_ar,
-          meta_title_en: plog.meta_title_en,
-          meta_description_ar: plog.meta_description_ar,
-          meta_description_en: plog.meta_description_en
-        }
-      end
-      data
-    end
-
-    def plog_details(plog_id)
-      plog = Plog.find_by(id: plog_id)
-      return nil unless plog
-
-      {
-        id: plog.id,
-        photo_id: plog.photo_id,
-        title_ar: plog.title_ar,
-        title_en: plog.title_en,
-        category: plog.category,
-        # photos: plog.photos,
-        contents: plog.contents.where(is_deleted: false,is_published: true).map do |content|
-          {
-            id: content.id,
-            content_ar: content.content_ar,
-            content_en: content.content_en
-          }
-        end,
-        faqs: plog.faqs.where(is_deleted: false , is_published: true).map do |faq|
-          {
-            id: faq.id,
-            question_ar: faq.question_ar,
-            question_en: faq.question_en,
-            answer_ar: faq.answer_ar,
-            answer_en: faq.answer_en
-          }
-        end
-      }
-    end
-  end
+  has_one_attached :photo_id
 end
