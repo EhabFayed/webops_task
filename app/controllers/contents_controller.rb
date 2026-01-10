@@ -1,21 +1,26 @@
 class ContentsController < ApplicationController
   # skip_before_action :authorize_request, only: [:create]
+  # GET /plog/:plog_id/contents
   def index
-  plog = Plog.find(params[:plog_id])
-
-  contents = plog.contents.where(is_deleted: false).map do |content|
-    {
-      id: content.id,
-      content_ar: content.content_ar,
-      content_en: content.content_en,
-      photos: content.photos.map { |p| url_for(p) }
-    }
+    plog = Plog.find(params[:plog_id])
+    contents = plog.contents.where(is_deleted: false).map do |content|
+      {
+        id: content.id,
+        content_ar: content.content_ar,
+        content_en: content.content_en,
+        photos: content.content_photos.map do |cp|
+          {
+            url: cp.photo.attached? ? url_for(cp.photo) : nil,
+            alt_ar: cp.alt_ar,
+            alt_en: cp.alt_en
+          }
+        end
+      }
+    end
+    render json: contents
   end
 
-  render json: contents
-end
-
-    # POST /plog/:plog_id/contents
+  # POST /plog/:plog_id/contents
   def create
     plog = Plog.find(params[:plog_id])
     content = plog.contents.build(content_params)
@@ -49,7 +54,13 @@ end
     :content_ar,
     :content_en,
     :is_published,
-    photos: []
+    content_photos_attributes: [
+      :id,
+      :alt_ar,
+      :alt_en,
+      :photo,
+      :_destroy
+    ]
   )
   end
 

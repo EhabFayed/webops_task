@@ -38,7 +38,13 @@ skip_before_action :authorize_request
                 id: content.id,
                 content_ar: content.content_ar,
                 content_en: content.content_en,
-                photos: content.photos.map { |p| url_for(p) },
+                photos: content.content_photos.map do |cp|
+                  {
+                    url: cp.photo.attached? ? url_for(cp.photo) : nil,
+                    alt_ar: cp.alt_ar,
+                    alt_en: cp.alt_en
+                  }
+                end
               }
             end,
             faqs: plog.faqs.where(is_deleted: false, is_published: true).map do |faq|
