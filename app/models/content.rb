@@ -4,5 +4,7 @@ class Content < ApplicationRecord
   belongs_to :plog
   belongs_to :user
 
-  has_many_attached :photos
+  has_many :content_photos, dependent: :destroy
+  accepts_nested_attributes_for :content_photos, allow_destroy: true
+
 end
