@@ -15,7 +15,7 @@ class Plog < ApplicationRecord
   scope :not_deleted, -> { where(is_deleted: false) }
   scope :published, -> { where(is_deleted: false, is_published: true) }
 
-  has_many :faqs
-  has_many :contents
-  has_one_attached :photo_id
+  has_many :faqs, dependent: :destroy
+  has_many :contents, dependent: :destroy
+  has_one_attached :photo_id, dependent: :destroy
 end
