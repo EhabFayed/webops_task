@@ -4,7 +4,7 @@ class FaqsController < ApplicationController
   # GET /plog/:plog_id/faqs
   def index
     plog = Plog.find(params[:plog_id])
-    faqs = plog.faqs.where(is_deleted: false).map do |faq|
+    faqs = plog.faqs.where(is_deleted: false).order(:id).map do |faq|
       {
         id: faq.id,
         question_ar: faq.question_ar,
@@ -43,7 +43,7 @@ class FaqsController < ApplicationController
   end
   # GET /faqs
   def index_without_plog
-    faqs = Faq.where(is_deleted: false, plog_id: nil).map do |faq|
+    faqs = Faq.where(is_deleted: false, plog_id: nil).order(:id).map do |faq|
       {
         id: faq.id,
         question_ar: faq.question_ar,

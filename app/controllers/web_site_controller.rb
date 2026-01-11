@@ -33,7 +33,7 @@ skip_before_action :authorize_request
             image_alt_text_en: plog.image_alt_text_en,
             meta_title_ar: plog.meta_title_ar,
             meta_title_en: plog.meta_title_en,
-            contents: plog.contents.where(is_deleted: false, is_published: true).map do |content|
+            contents: plog.contents.where(is_deleted: false, is_published: true).order(:id).map do |content|
               {
                 id: content.id,
                 content_ar: content.content_ar,
@@ -47,7 +47,7 @@ skip_before_action :authorize_request
                 end
               }
             end,
-            faqs: plog.faqs.where(is_deleted: false, is_published: true).map do |faq|
+            faqs: plog.faqs.where(is_deleted: false, is_published: true).order(:id).map do |faq|
               {
                 id: faq.id,
                 question_ar: faq.question_ar,
@@ -65,7 +65,7 @@ skip_before_action :authorize_request
   end
 
   def faq_about_us
-    faqs = Faq.where(is_deleted: false, is_published: true, plog_id: nil)
+    faqs = Faq.where(is_deleted: false, is_published: true, plog_id: nil).order(:id)
 
     render json: faqs.map { |faq|
       {
