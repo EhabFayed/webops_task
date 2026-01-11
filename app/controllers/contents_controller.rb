@@ -3,7 +3,7 @@ class ContentsController < ApplicationController
   # GET /plog/:plog_id/contents
   def index
     plog = Plog.find(params[:plog_id])
-    contents = plog.contents.where(is_deleted: false).map do |content|
+    contents = plog.contents.where(is_deleted: false).order(:id).map do |content|
       {
         id: content.id,
         content_ar: content.content_ar,

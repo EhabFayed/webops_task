@@ -2,7 +2,7 @@ class PlogsController < ApplicationController
 
   # GET /plogs
   def index
-    plogs = Plog.not_deleted.map do |plog|
+    plogs = Plog.not_deleted.order(:id).map do |plog|
       {
         id: plog.id,
         title_ar: plog.title_ar,
@@ -40,7 +40,7 @@ class PlogsController < ApplicationController
           meta_title_ar: plog.meta_title_ar,
           meta_title_en: plog.meta_title_en,
           is_published: plog.is_published,
-          contents: plog.contents.where(is_deleted: false).map do |content|
+          contents: plog.contents.where(is_deleted: false).order(:id).map do |content|
             {
               id: content.id,
               content_ar: content.content_ar,
@@ -56,7 +56,7 @@ class PlogsController < ApplicationController
               end
             }
           end,
-          faqs: plog.faqs.where(is_deleted: false).map do |faq|
+          faqs: plog.faqs.where(is_deleted: false).order(:id).map do |faq|
             {
               id: faq.id,
               question_ar: faq.question_ar,
