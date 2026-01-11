@@ -45,7 +45,7 @@ class ContentsController < ApplicationController
   # DELETE /plog/:plog_id/contents/:id
   def destroy
     content = Content.find(params[:id])
-      content.update(is_deleted: true)
+      content.destroy
       render json: { message: 'Content deleted successfully' }, status: :ok
   end
 

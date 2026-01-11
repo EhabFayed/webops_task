@@ -83,7 +83,7 @@ class FaqsController < ApplicationController
   # DELETE plog/:plog_id/faqs/:id
   def destroy
     faq = Faq.find(params[:id])
-    faq.update(is_deleted: true)
+    faq.destroy
     render json: { message: 'Faq deleted successfully' }, status: :ok
   end
 

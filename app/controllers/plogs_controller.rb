@@ -95,7 +95,7 @@ class PlogsController < ApplicationController
 
   def destroy
     plog = Plog.find(params[:id])
-    plog.update(is_deleted: true)
+    plog.destroy
     render json: { message: 'Plog deleted successfully' }, status: :ok
   end
 
