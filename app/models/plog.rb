@@ -2,6 +2,9 @@ class Plog < ApplicationRecord
   extend Enumerize
 
   validates :title_ar, :title_en, presence: true
+  validates :slug, presence: true, uniqueness: true
+  validates :slug_ar, uniqueness: true, presence: true
+
 
   enumerize :category, in: {
     all: 0,
@@ -18,4 +21,11 @@ class Plog < ApplicationRecord
   has_many :faqs, dependent: :destroy
   has_many :contents, dependent: :destroy
   has_one_attached :photo_id, dependent: :destroy
+
+
+  # app/models/plog.rb
+  def self.find_by_any_slug(slug)
+    find_by("slug = :s OR slug_ar = :s", s: slug)
+  end
+
 end

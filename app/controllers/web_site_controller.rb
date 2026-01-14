@@ -10,6 +10,7 @@ skip_before_action :authorize_request
         title_en: plog.title_en,
         category: plog.category,
         slug: plog.slug,
+        slug_ar: plog.slug_ar,
         photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
         image_alt_text_ar: plog.image_alt_text_ar,
         image_alt_text_en: plog.image_alt_text_en,
@@ -18,7 +19,7 @@ skip_before_action :authorize_request
     render json: plogs
   end
   def plog_show
-    plog = Plog.find_by(slug: params[:slug])
+    plog = Plog.find_by_any_slug(params[:slug])
     if plog
       data = {
             id: plog.id,
@@ -26,6 +27,7 @@ skip_before_action :authorize_request
             title_en: plog.title_en,
             category: plog.category,
             slug: plog.slug,
+            slug_ar: plog.slug_ar,
             photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
             meta_description_ar: plog.meta_description_ar,
             meta_description_en: plog.meta_description_en,
