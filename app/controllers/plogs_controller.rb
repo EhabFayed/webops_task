@@ -9,6 +9,7 @@ class PlogsController < ApplicationController
         title_en: plog.title_en,
         category: plog.category,
         slug: plog.slug,
+        slug_ar: plog.slug_ar,
         photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
         meta_description_ar: plog.meta_description_ar,
         meta_description_en: plog.meta_description_en,
@@ -32,6 +33,7 @@ class PlogsController < ApplicationController
           title_en: plog.title_en,
           category: plog.category,
           slug: plog.slug,
+          slug_ar: plog.slug_ar,
           photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
           meta_description_ar: plog.meta_description_ar,
           meta_description_en: plog.meta_description_en,
@@ -114,7 +116,8 @@ class PlogsController < ApplicationController
       :meta_description_en,
       :category,
       :is_published,
-      :photo_id
+      :photo_id,
+      :slug_ar
     )
   end
 end
