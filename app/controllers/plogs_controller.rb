@@ -10,11 +10,19 @@ class PlogsController < ApplicationController
         category: plog.category,
         slug: plog.slug,
         slug_ar: plog.slug_ar,
-        photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
+        # photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
+        photos: plog.plog_photos.map do |photo|
+          {
+            id: photo.id,
+            url: photo.photo.attached? ? url_for(photo.photo) : nil,
+            alt: photo.is_arabic ? photo.alt_ar : photo.alt_en,
+            is_arabic: photo.is_arabic
+          }
+        end,
         meta_description_ar: plog.meta_description_ar,
         meta_description_en: plog.meta_description_en,
-        image_alt_text_ar: plog.image_alt_text_ar,
-        image_alt_text_en: plog.image_alt_text_en,
+        # image_alt_text_ar: plog.image_alt_text_ar, # Obsolete
+        # image_alt_text_en: plog.image_alt_text_en, # Obsolete
         meta_title_ar: plog.meta_title_ar,
         meta_title_en: plog.meta_title_en,
         is_published: plog.is_published
@@ -34,11 +42,19 @@ class PlogsController < ApplicationController
           category: plog.category,
           slug: plog.slug,
           slug_ar: plog.slug_ar,
-          photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
+          # photo_url: plog.photo_id.attached? ? url_for(plog.photo_id) : nil,
+          photos: plog.plog_photos.map do |photo|
+            {
+              id: photo.id,
+              url: photo.photo.attached? ? url_for(photo.photo) : nil,
+              alt: photo.is_arabic ? photo.alt_ar : photo.alt_en,
+              is_arabic: photo.is_arabic
+            }
+          end,
           meta_description_ar: plog.meta_description_ar,
           meta_description_en: plog.meta_description_en,
-          image_alt_text_ar: plog.image_alt_text_ar,
-          image_alt_text_en: plog.image_alt_text_en,
+          # image_alt_text_ar: plog.image_alt_text_ar,
+          # image_alt_text_en: plog.image_alt_text_en,
           meta_title_ar: plog.meta_title_ar,
           meta_title_en: plog.meta_title_en,
           is_published: plog.is_published,
@@ -107,8 +123,8 @@ class PlogsController < ApplicationController
     params.require(:plog).permit(
       :title_ar,
       :title_en,
-      :image_alt_text_ar,
-      :image_alt_text_en,
+      #:image_alt_text_ar,
+      #:image_alt_text_en,
       :meta_title_ar,
       :meta_title_en,
       :slug,
@@ -116,8 +132,9 @@ class PlogsController < ApplicationController
       :meta_description_en,
       :category,
       :is_published,
-      :photo_id,
-      :slug_ar
+      # :photo_id,
+      :slug_ar,
+      plog_photos_attributes: [:id, :photo, :alt_ar, :alt_en, :is_arabic, :_destroy]
     )
   end
 end

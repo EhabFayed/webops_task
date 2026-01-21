@@ -20,7 +20,11 @@ class Plog < ApplicationRecord
 
   has_many :faqs, dependent: :destroy
   has_many :contents, dependent: :destroy
-  has_one_attached :photo_id, dependent: :destroy
+  # has_one_attached :photo_id, dependent: :destroy # Deprecated in favor of plog_photos
+  has_many :plog_photos, dependent: :destroy
+  accepts_nested_attributes_for :plog_photos, allow_destroy: true, reject_if: :all_blank
+
+  validates :plog_photos, length: { maximum: 2, message: "can have at most 2 photos" }
 
 
   # app/models/plog.rb
