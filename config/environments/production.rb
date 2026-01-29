@@ -27,7 +27,7 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # Only enable if SSL is properly configured (e.g., behind nginx with SSL)
-  config.force_ssl = ENV.fetch("RAILS_FORCE_SSL", "false") == "true"
+  config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
   # This is important for Docker healthchecks to work properly
@@ -58,7 +58,7 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   # Use environment variable or default to the domain
-  config.action_mailer.default_url_options = { 
+  config.action_mailer.default_url_options = {
     host: ENV.fetch("RAILS_HOST", "backend.mila-knight.com"),
     protocol: ENV.fetch("RAILS_PROTOCOL", "https")
   }
