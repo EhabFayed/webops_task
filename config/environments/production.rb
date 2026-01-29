@@ -27,7 +27,7 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # Only enable if SSL is properly configured (e.g., behind nginx with SSL)
-  config.force_ssl = true
+  config.force_ssl = false
 
   # Skip http-to-https redirect for the default health check endpoint.
   # This is important for Docker healthchecks to work properly
