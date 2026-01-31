@@ -5,43 +5,72 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: myapp_development
+      POSTGRES_DB: app_production
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7
     restart: always
-    ports:
-      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   app:
     build: .
+    image: myapp_image:latest 
     restart: always
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postgres:password@db:5432/app_production
       REDIS_URL: redis://redis:6379/0
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_SERVE_STATIC_FILES: "true"
+      RAILS_HOST: backend.mila-knight.com
+      RAILS_PROTOCOL: https
+      RAILS_ASSUME_SSL: "false"
+      RAILS_FORCE_SSL: "false"
+      PORT: "9001"
+      # Secret key base for Rails production (generate with: openssl rand -hex 64)
+      SECRET_KEY_BASE: "502dbc5ee08cfc4507e6bb6a64606c5a10134564e81f28a5af93d27024ec0fac3184afc69f680ebc5d9d1cf76d90ce8be975a2f3e1d0f0661d83fb9441e55d07"
     volumes:
-      - .:/app
       - storage:/app/storage
     ports:
-      - "3000:3000"
-    command: ["bin/rails", "server", "-b", "0.0.0.0"]
+      - "9001:9001"  # Map host port 9001 to container port 9001
+    command: ["bash", "-c", "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0 -p ${PORT:-9001}"]
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -f http://localhost:${PORT:-9001}/up || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   sidekiq:
-    build: .
+    image: myapp_image:latest 
     restart: always
     depends_on:
-      - redis
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/myapp_development
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postgres:password@db:5432/app_production
       REDIS_URL: redis://redis:6379/0
+      # Use the same SECRET_KEY_BASE as app service
+      SECRET_KEY_BASE: "502dbc5ee08cfc4507e6bb6a64606c5a10134564e81f28a5af93d27024ec0fac3184afc69f680ebc5d9d1cf76d90ce8be975a2f3e1d0f0661d83fb9441e55d07"
     volumes:
       - storage:/app/storage
     command: ["bundle", "exec", "sidekiq"]
