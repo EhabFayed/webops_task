@@ -18,7 +18,7 @@ class PlogsController < ApplicationController
         photos: plog.plog_photos.map { |photo|
           {
             id: photo.id,
-            url: photo.photo.attached? ? url_for(photo.photo) : nil,
+            url: photo.photo.attached? ? photo.cached_photo_url : nil,
             alt: photo.is_arabic ? photo.alt_ar : photo.alt_en,
             is_arabic: photo.is_arabic
           }
@@ -52,7 +52,7 @@ end
       photos: plog.plog_photos.map { |photo|
         {
           id: photo.id,
-          url: photo.cached_photo_url,
+          url: photo.photo.attached? ? photo.cached_photo_url : nil,
           alt: photo.is_arabic ? photo.alt_ar : photo.alt_en,
           is_arabic: photo.is_arabic
         }
@@ -74,7 +74,7 @@ end
             photos: content.content_photos.map { |cp|
               {
                 id: cp.id,
-                url: cp.cached_photo_url,
+                url: cp.photo.attached? ? cp.cached_photo_url : nil,
                 alt_ar: cp.alt_ar,
                 alt_en: cp.alt_en
               }
