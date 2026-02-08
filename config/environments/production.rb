@@ -65,6 +65,8 @@ Rails.application.configure do
     host: ENV.fetch("RAILS_HOST", "backend.mila-knight.com"),
     protocol: ENV.fetch("RAILS_PROTOCOL", "https")
   }
+  Rails.application.routes.default_url_options[:host] = "backend.mila-knight.com"
+  Rails.application.routes.default_url_options[:protocol] = "https"
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
