@@ -11,7 +11,7 @@ class ContentsController < ApplicationController
         photos: content.content_photos.map do |cp|
           {
             cp_id: cp.id,
-            url: cp.photo.attached? ? url_for(cp.photo) : nil,
+            url: cp.photo.attached? ? cp.cached_photo_url : nil,
             alt_ar: cp.alt_ar,
             alt_en: cp.alt_en
           }
