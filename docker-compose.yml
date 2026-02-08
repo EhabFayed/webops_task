@@ -25,7 +25,7 @@ services:
 
   app:
     build: .
-    image: myapp_image:latest 
+    image: myapp_image:latest
     restart: always
     depends_on:
       db:
@@ -58,7 +58,7 @@ services:
       start_period: 40s
 
   sidekiq:
-    image: myapp_image:latest 
+    image: myapp_image:latest
     restart: always
     depends_on:
       db:
