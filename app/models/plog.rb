@@ -32,4 +32,12 @@ class Plog < ApplicationRecord
     find_by("slug = :s OR slug_ar = :s", s: slug)
   end
 
+  after_save :publish_associated_records, if: -> { saved_change_to_is_published? && is_published? }
+
+  private
+
+  def publish_associated_records
+    contents.update_all(is_published: true)
+    faqs.update_all(is_published: true)
+  end
 end
