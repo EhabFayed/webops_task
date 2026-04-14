@@ -16,7 +16,7 @@ class Plog < ApplicationRecord
   }
 
   scope :not_deleted, -> { where(is_deleted: false) }
-  scope :published, -> { where(is_deleted: false, is_published: true) }
+  scope :published, -> { where(is_deleted: false, is_published: true).order(created_at: :desc) }
 
   has_many :faqs, dependent: :destroy
   has_many :contents, dependent: :destroy
