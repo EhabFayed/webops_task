@@ -34,7 +34,9 @@ class WebSiteController < ApplicationController
       )
       .find_by_any_slug(params[:slug])
 
-    return render json: { error: "Plog not found" }, status: :not_found unless plog
+    unless plog
+      return render json: { error: "Moved permanently" }, status: :moved_permanently
+    end
 
     render json: {
       id: plog.id,
