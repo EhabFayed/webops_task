@@ -3,7 +3,7 @@ FROM ruby:3.2
 
 # Install dependencies (including libvips for ruby-vips)
 RUN apt-get update -qq && \
-    apt-get install -y nodejs npm postgresql-client libvips-dev
+    apt-get install -y nodejs npm postgresql-client libvips-dev curl
 
 # Set working directory
 WORKDIR /app
@@ -24,8 +24,17 @@ RUN bundle install
 # Copy the rest of the application source code
 COPY . .
 
+# Copy docker-entrypoint script
+COPY bin/docker-entrypoint /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint
+
 # Expose Rails port
-EXPOSE 3000
+EXPOSE 9001
+
+# Use docker-entrypoint as entrypoint
+ENTRYPOINT ["docker-entrypoint"]
 
 # Start Rails server
-CMD ["rails", "server", "-b", "0.0.0.0"]
+# Use PORT environment variable or default to 9001
+# Note: This CMD is overridden by docker-compose.yml command
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0 -p ${PORT:-9001}"]
